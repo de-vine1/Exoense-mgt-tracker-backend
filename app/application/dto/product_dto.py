@@ -4,11 +4,11 @@ from decimal import Decimal
 from datetime import datetime
 from typing import Optional
 
-class FeeCategoryCreate(BaseModel):
+class CategoryCreate(BaseModel):
     name: str
     description: Optional[str] = None
 
-class FeeCategoryResponse(BaseModel):
+class CategoryResponse(BaseModel):
     id: UUID
     name: str
     description: Optional[str] = None
@@ -17,12 +17,12 @@ class FeeCategoryResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class FeeCreate(BaseModel):
+class ProductCreate(BaseModel):
     name: str
-    amount: Decimal = Field(gt=0, le=10000000, description="Fee amount must be positive and not exceed 10,000,000")
+    amount: Decimal = Field(gt=0, le=10000000, description="Product amount must be positive and not exceed 10,000,000")
     category_id: UUID
 
-class FeeResponse(BaseModel):
+class ProductResponse(BaseModel):
     id: UUID
     name: str
     amount: Decimal
@@ -32,10 +32,10 @@ class FeeResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class StudentFeeResponse(BaseModel):
+class StudentProductResponse(BaseModel):
     id: UUID
     student_id: UUID
-    fee_id: UUID
+    product_id: UUID
     amount_due: Decimal
     amount_paid: Decimal
     is_paid: bool
