@@ -24,6 +24,18 @@ class StudentResponse(StudentBase):
     class Config:
         from_attributes = True
 
+class StudentUpdate(BaseModel):
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    grade: Optional[int] = None
+    term: Optional[int] = None
+    is_active: Optional[bool] = None
+    is_link_confirmed: Optional[bool] = None
+    parent_id: Optional[UUID] = None
+
+
 class WalletResponse(BaseModel):
     balance: float
     payer_id: UUID

@@ -24,8 +24,23 @@ class StudentRepositoryImpl(StudentRepository):
         self.db.refresh(student)
         return student
 
+    def get_all(self) -> List[Student]:
+        return self.db.query(Student).all()
+
     def get_pending_links(self, student_id: UUID) -> List[Student]:
         return self.db.query(Student).filter(
             Student.parent_id == student_id,
             Student.is_link_confirmed == False
         ).all()
+
+    def get_by_parent_id(self, parent_id: UUID) -> List[Student]:
+        return self.db.query(Student).filter(Student.parent_id == parent_id).all()
+
+    def delete(self, student_id: UUID) -> bool:
+        student = self.get_by_id(student_id)
+        if student:
+            self.db.delete(student)
+            self.db.commit()
+            return True
+        return False
+

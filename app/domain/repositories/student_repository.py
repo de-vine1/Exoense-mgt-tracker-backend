@@ -15,7 +15,20 @@ class StudentRepository(ABC):
     @abstractmethod
     def save(self, student: Student) -> Student:
         pass
+
+    @abstractmethod
+    def get_all(self) -> List[Student]:
+        pass
     
     @abstractmethod
     def get_pending_links(self, student_id: UUID) -> List[Student]:
         pass
+
+    @abstractmethod
+    def get_by_parent_id(self, parent_id: UUID) -> List[Student]:
+        pass
+    
+    @abstractmethod
+    def delete(self, student_id: UUID) -> bool:
+        pass
+

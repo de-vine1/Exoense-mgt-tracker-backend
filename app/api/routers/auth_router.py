@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 import logging
 from app.application.dto.auth_dto import LoginRequest, TokenResponse
@@ -13,39 +13,53 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+# --- Dependency Providers ---
+
+def get_student_login_use_case(db: Session = Depends(get_db)) -> LoginUseCase:
+    return LoginUseCase(student_repo=StudentRepositoryImpl(db))
+
+def get_parent_login_use_case(db: Session = Depends(get_db)) -> LoginUseCase:
+    return LoginUseCase(parent_repo=ParentRepositoryImpl(db))
+
+def get_admin_login_use_case(db: Session = Depends(get_db)) -> LoginUseCase:
+    return LoginUseCase(admin_repo=AdminRepositoryImpl(db))
+
+# --- Routes ---
+
 @router.post("/login/student", response_model=TokenResponse)
-def login_student(login_request: LoginRequest, db: Session = Depends(get_db)):
+def login_student(
+    login_request: LoginRequest, 
+    use_case: LoginUseCase = Depends(get_student_login_use_case)
+):
     """Authenticate student using registration number and password"""
-    student_repo = StudentRepositoryImpl(db)
-    use_case = LoginUseCase(student_repo=student_repo)
-    
     try:
         return use_case.execute_student(login_request.username_or_email_or_reg, login_request.password)
     except DomainException as e:
         logger.warning(f"Student login failed: {str(e)}")
-        raise HTTPException(status_code=401, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
 
 @router.post("/login/parent", response_model=TokenResponse)
-def login_parent(login_request: LoginRequest, db: Session = Depends(get_db)):
+def login_parent(
+    login_request: LoginRequest, 
+    use_case: LoginUseCase = Depends(get_parent_login_use_case)
+):
     """Authenticate parent using email and password"""
-    parent_repo = ParentRepositoryImpl(db)
-    use_case = LoginUseCase(parent_repo=parent_repo)
-    
     try:
         return use_case.execute_parent(login_request.username_or_email_or_reg, login_request.password)
     except DomainException as e:
         logger.warning(f"Parent login failed: {str(e)}")
-        raise HTTPException(status_code=401, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
 
 @router.post("/login/admin", response_model=TokenResponse)
-def login_admin(login_request: LoginRequest, db: Session = Depends(get_db)):
+def login_admin(
+    login_request: LoginRequest, 
+    use_case: LoginUseCase = Depends(get_admin_login_use_case)
+):
     """Authenticate admin using username/email and password"""
-    admin_repo = AdminRepositoryImpl(db)
-    use_case = LoginUseCase(admin_repo=admin_repo)
-    
     try:
         return use_case.execute_admin(login_request.username_or_email_or_reg, login_request.password)
     except DomainException as e:
         logger.warning(f"Admin login failed: {str(e)}")
-        raise HTTPException(status_code=401, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
+
 

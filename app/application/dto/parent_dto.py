@@ -18,3 +18,11 @@ class ParentResponse(ParentBase):
 
     class Config:
         from_attributes = True
+
+class ParentUpdate(BaseModel):
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    is_active: Optional[bool] = None
+
