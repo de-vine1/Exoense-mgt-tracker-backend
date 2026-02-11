@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Optional
 from app.domain.repositories.student_repository import StudentRepository
 from app.domain.repositories.parent_repository import ParentRepository
 from app.domain.repositories.admin_repository import AdminRepository
@@ -9,9 +10,9 @@ from app.domain.exceptions import DomainException
 class LoginUseCase:
     def __init__(
         self, 
-        student_repo: StudentRepository,
-        parent_repo: ParentRepository,
-        admin_repo: AdminRepository
+        student_repo: Optional[StudentRepository] = None,
+        parent_repo: Optional[ParentRepository] = None,
+        admin_repo: Optional[AdminRepository] = None
     ):
         self.student_repo = student_repo
         self.parent_repo = parent_repo
@@ -20,22 +21,23 @@ class LoginUseCase:
     def execute_student(self, reg_number: str, password: str) -> TokenResponse:
         student = self.student_repo.get_by_reg_number(reg_number)
         if not student or not verify_password(password, student.hashed_password):
-            raise DomainException("Invalid registration number or password")
+            raise DomainException("Invalid Credentials")
         
         access_token = create_access_token(
             subject=student.id,
-            expires_delta=timedelta(hours=1),
-            # In a real app, you'd add the role to the token payload
+            role="student",
+            expires_delta=timedelta(hours=1)
         )
         return TokenResponse(access_token=access_token, role="student")
 
     def execute_parent(self, email: str, password: str) -> TokenResponse:
         parent = self.parent_repo.get_by_email(email)
         if not parent or not verify_password(password, parent.hashed_password):
-            raise DomainException("Invalid email or password")
+            raise DomainException("Invalid Credentials")
         
         access_token = create_access_token(
             subject=parent.id,
+            role="parent",
             expires_delta=timedelta(hours=1)
         )
         return TokenResponse(access_token=access_token, role="parent")
@@ -45,10 +47,11 @@ class LoginUseCase:
                 self.admin_repo.get_by_username(username_or_email)
         
         if not admin or not verify_password(password, admin.hashed_password):
-            raise DomainException("Invalid credentials")
+            raise DomainException("Invalid Credentials")
         
         access_token = create_access_token(
             subject=admin.id,
+            role="admin",
             expires_delta=timedelta(hours=1)
         )
         return TokenResponse(access_token=access_token, role="admin")

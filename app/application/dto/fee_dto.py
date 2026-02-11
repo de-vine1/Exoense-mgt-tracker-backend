@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 from decimal import Decimal
 from datetime import datetime
@@ -19,7 +19,7 @@ class FeeCategoryResponse(BaseModel):
 
 class FeeCreate(BaseModel):
     name: str
-    amount: Decimal
+    amount: Decimal = Field(gt=0, le=10000000, description="Fee amount must be positive and not exceed 10,000,000")
     category_id: UUID
 
 class FeeResponse(BaseModel):

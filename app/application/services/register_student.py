@@ -36,4 +36,4 @@ class RegisterStudentUseCase:
         )
         self.wallet_repo.save(wallet)
         
-        return StudentResponse.from_orm(saved_student)
+        return StudentResponse.model_validate(saved_student)

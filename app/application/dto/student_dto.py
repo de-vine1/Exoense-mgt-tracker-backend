@@ -23,3 +23,12 @@ class StudentResponse(StudentBase):
 
     class Config:
         from_attributes = True
+
+class WalletResponse(BaseModel):
+    balance: float
+    payer_id: UUID
+    payer_type: str
+    
+    class Config:
+        from_attributes = True
+

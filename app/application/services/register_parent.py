@@ -33,4 +33,4 @@ class RegisterParentUseCase:
         )
         self.wallet_repo.save(wallet)
         
-        return ParentResponse.from_orm(saved_parent)
+        return ParentResponse.model_validate(saved_parent)
