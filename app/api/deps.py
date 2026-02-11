@@ -55,3 +55,31 @@ def get_current_admin(user_data: dict = Depends(get_current_user_data)):
             detail="The user doesn't have enough privileges"
         )
     return user_data
+
+def get_student_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.student_repo_impl import StudentRepositoryImpl
+    return StudentRepositoryImpl(db)
+
+def get_parent_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.parent_repo_impl import ParentRepositoryImpl
+    return ParentRepositoryImpl(db)
+
+def get_staff_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.staff_repo_impl import StaffRepositoryImpl
+    return StaffRepositoryImpl(db)
+
+def get_product_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.product_repo_impl import ProductRepositoryImpl
+    return ProductRepositoryImpl(db)
+
+def get_wallet_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.wallet_repo_impl import WalletRepositoryImpl
+    return WalletRepositoryImpl(db)
+
+def get_transaction_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.transaction_repo_impl import TransactionRepositoryImpl
+    return TransactionRepositoryImpl(db)
+
+def get_sale_repo(db: Session = Depends(get_db)):
+    from app.infrastructure.repositories.sale_repo_impl import SaleRepositoryImpl
+    return SaleRepositoryImpl(db)
