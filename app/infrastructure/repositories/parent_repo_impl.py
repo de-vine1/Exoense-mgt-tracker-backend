@@ -1,9 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from sqlalchemy.orm import Session
 from app.domain.entities.parent import Parent
 from app.domain.repositories.parent_repository import ParentRepository
-
 
 class ParentRepositoryImpl(ParentRepository):
     def __init__(self, db: Session):
@@ -20,3 +19,14 @@ class ParentRepositoryImpl(ParentRepository):
         self.db.commit()
         self.db.refresh(parent)
         return parent
+
+    def get_all(self, skip: int = 0, limit: int = 100) -> List[Parent]:
+        return self.db.query(Parent).offset(skip).limit(limit).all()
+
+    def delete(self, parent_id: UUID) -> bool:
+        parent = self.get_by_id(parent_id)
+        if parent:
+            self.db.delete(parent)
+            self.db.commit()
+            return True
+        return False

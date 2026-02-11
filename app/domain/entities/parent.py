@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlmodel import Field
 from app.domain.entities.base import Person, Address
-from app.domain.enums.transaction_type import EntityStatus
+from app.domain.enums.entity_type import EntityStatus
 from sqlalchemy import Column, JSON
 
 class Parent(Person, table=True):

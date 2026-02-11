@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Optional
 from sqlmodel import Field
 from app.domain.entities.base import BaseEntity
-from app.domain.enums.transaction_type import EntityStatus
+from app.domain.enums.entity_type import EntityStatus
 
 class Sale(BaseEntity, table=True):
     transaction_id: str = Field(unique=True, index=True)
