@@ -1,33 +1,14 @@
-from datetime import datetime
-from typing import Optional, TYPE_CHECKING
-from uuid import UUID, uuid4
-from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional
+from sqlmodel import Field
+from app.domain.entities.base import Person, Address
+from app.domain.enums.entity_type import EntityStatus
+from sqlalchemy import Column, JSON
 
-if TYPE_CHECKING:
-    from app.domain.entities.parent import Parent
-    from app.domain.entities.wallet import Wallet
-
-class Student(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
+class Student(Person, table=True):
+    address: Optional[Address] = Field(default=None, sa_column=Column(JSON))
+    class_name: Optional[str] = None
+    group_name: Optional[str] = None
+    status: EntityStatus = Field(default=EntityStatus.ACTIVE)
+    image: Optional[str] = None
+    qr_code: Optional[str] = None
     reg_number: str = Field(unique=True, index=True)
-    firstname: str
-    lastname: str
-    email: str = Field(unique=True)
-    hashed_password: str
-    
-    grade: Optional[int] = Field(default=None)
-    term: Optional[int] = Field(default=None)
-    
-    # Parent link is optional (allows self-registration)
-    parent_id: Optional[UUID] = Field(default=None, foreign_key="parent.id")
-    is_link_confirmed: bool = Field(default=False)
-    
-    # Relationships
-    parent: Optional["Parent"] = Relationship(back_populates="children")
-    wallet: Optional["Wallet"] = Relationship(
-        sa_relationship_kwargs={"uselist": False}, 
-        back_populates="student"
-    )
-    
-    is_active: bool = True
-    created_at: datetime = Field(default_factory=datetime.now)

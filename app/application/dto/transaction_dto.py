@@ -1,20 +1,14 @@
-from pydantic import BaseModel
-from uuid import UUID
-from decimal import Decimal
 from datetime import datetime
+from uuid import UUID
 from typing import Optional
-from app.domain.enums.transaction_type import TransactionStatus, PaymentMethod, Gateway, PayerType
+from pydantic import BaseModel
+from app.application.dto.base_dto import BaseDTO
+from app.domain.enums.transaction_type import TransactionStatus
 
-class TransactionResponse(BaseModel):
-    id: UUID
-    amount: Decimal
+class WalletTransactionRead(BaseDTO):
+    wallet_id: UUID
+    amount: float
+    transaction_id: str
+    external_transaction_id: Optional[str] = None
+    transaction_date: datetime
     status: TransactionStatus
-    gateway: Gateway
-    payment_method: PaymentMethod
-    payer_id: UUID
-    payer_type: PayerType
-    description: Optional[str] = None
-    created_at: datetime
-
-    class Config:
-        from_attributes = True

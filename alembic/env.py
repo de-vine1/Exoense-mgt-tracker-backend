@@ -27,12 +27,11 @@ from app.core.config import settings
 from sqlmodel import SQLModel
 from app.domain.entities.student import Student
 from app.domain.entities.parent import Parent
-from app.domain.entities.admin import Admin
+from app.domain.entities.staff import Staff
 from app.domain.entities.wallet import Wallet
-from app.domain.entities.fee import Fee
-from app.domain.entities.fee_category import FeeCategory
-from app.domain.entities.student_fee import StudentFee
-from app.domain.entities.transaction import Transaction
+from app.domain.entities.transaction import WalletTransaction
+from app.domain.entities.product import Product
+from app.domain.entities.sale import Sale, SaleDetail
 
 # Set target metadata to SQLModel's metadata
 target_metadata = SQLModel.metadata

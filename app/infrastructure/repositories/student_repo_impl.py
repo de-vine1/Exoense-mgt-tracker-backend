@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from app.domain.entities.student import Student
 from app.domain.repositories.student_repository import StudentRepository
 
-
 class StudentRepositoryImpl(StudentRepository):
     def __init__(self, db: Session):
         self.db = db
@@ -24,8 +23,13 @@ class StudentRepositoryImpl(StudentRepository):
         self.db.refresh(student)
         return student
 
-    def get_pending_links(self, student_id: UUID) -> List[Student]:
-        return self.db.query(Student).filter(
-            Student.parent_id == student_id,
-            Student.is_link_confirmed == False
-        ).all()
+    def get_all(self, skip: int = 0, limit: int = 100) -> List[Student]:
+        return self.db.query(Student).offset(skip).limit(limit).all()
+
+    def delete(self, student_id: UUID) -> bool:
+        student = self.get_by_id(student_id)
+        if student:
+            self.db.delete(student)
+            self.db.commit()
+            return True
+        return False

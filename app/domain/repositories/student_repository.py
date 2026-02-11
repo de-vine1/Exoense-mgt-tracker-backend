@@ -7,15 +7,23 @@ class StudentRepository(ABC):
     @abstractmethod
     def get_by_id(self, student_id: UUID) -> Optional[Student]:
         pass
-    
+
     @abstractmethod
     def get_by_reg_number(self, reg_number: str) -> Optional[Student]:
         pass
-    
+
+    @abstractmethod
+    def get_by_email(self, email: str) -> Optional[Student]:
+        pass
+
     @abstractmethod
     def save(self, student: Student) -> Student:
         pass
-    
+
     @abstractmethod
-    def get_pending_links(self, student_id: UUID) -> List[Student]:
+    def get_all(self, skip: int = 0, limit: int = 100) -> List[Student]:
+        pass
+
+    @abstractmethod
+    def delete(self, student_id: UUID) -> bool:
         pass
