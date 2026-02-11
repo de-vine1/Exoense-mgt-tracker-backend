@@ -1,21 +1,14 @@
 from datetime import datetime
-from decimal import Decimal
+from uuid import UUID
 from typing import Optional
-from uuid import UUID, uuid4
-from sqlmodel import SQLModel, Field
-from app.domain.enums.transaction_type import TransactionStatus, PaymentMethod, Gateway, PayerType
+from sqlmodel import Field
+from app.domain.entities.base import BaseEntity
+from app.domain.enums.transaction_type import TransactionStatus
 
-class Transaction(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    amount: Decimal = Field(decimal_places=2)
+class WalletTransaction(BaseEntity, table=True):
+    wallet_id: UUID = Field(foreign_key="wallet.id")
+    amount: float
+    transaction_id: str = Field(unique=True, index=True)
+    external_transaction_id: Optional[str] = None
+    transaction_date: datetime = Field(default_factory=datetime.now)
     status: TransactionStatus = Field(default=TransactionStatus.PENDING)
-    
-    gateway: Gateway = Field(default=Gateway.FLUTTERWAVE)
-    gateway_transaction_id: Optional[str] = Field(default=None, index=True)
-    payment_method: PaymentMethod = Field(default=PaymentMethod.CARD)
-    
-    payer_id: UUID = Field(index=True) 
-    payer_type: PayerType = Field()
-    
-    description: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.now)

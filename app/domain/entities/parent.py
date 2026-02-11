@@ -1,27 +1,10 @@
-from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING
-from uuid import UUID, uuid4
-from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional
+from sqlmodel import Field
+from app.domain.entities.base import Person, Address
+from app.domain.enums.transaction_type import EntityStatus
+from sqlalchemy import Column, JSON
 
-if TYPE_CHECKING:
-    from app.domain.entities.student import Student
-    from app.domain.entities.wallet import Wallet
-
-class Parent(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    firstname: str
-    lastname: str
-    email: str = Field(unique=True)
-    hashed_password: str
-    
-    # One Parent -> Many Students
-    children: List["Student"] = Relationship(back_populates="parent")
-    
-    # One Parent -> One Wallet
-    wallet: Optional["Wallet"] = Relationship(
-        sa_relationship_kwargs={"uselist": False}, 
-        back_populates="parent"
-    )
-    
-    is_active: bool = True
-    created_at: datetime = Field(default_factory=datetime.now)
+class Parent(Person, table=True):
+    address: Optional[Address] = Field(default=None, sa_column=Column(JSON))
+    occupation: Optional[str] = None
+    status: EntityStatus = Field(default=EntityStatus.ACTIVE)
