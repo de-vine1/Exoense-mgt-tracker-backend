@@ -1,5 +1,6 @@
 from app.application.dto.staff_dto import StaffCreate
 from app.domain.repositories.staff_repository import StaffRepository
+from app.domain.entities.staff import Staff
 from app.core.security import get_password_hash
 
 def create_staff_service(repo: StaffRepository, staff_data: StaffCreate) -> Staff:

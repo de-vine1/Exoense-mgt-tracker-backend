@@ -1,5 +1,6 @@
 from app.application.dto.student_dto import StudentCreate
 from app.domain.repositories.student_repository import StudentRepository
+from app.domain.entities.student import Student
 from app.core.security import get_password_hash
 
 def create_student_service(repo: StudentRepository, student_data: StudentCreate) -> Student:

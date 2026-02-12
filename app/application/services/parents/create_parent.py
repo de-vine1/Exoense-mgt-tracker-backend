@@ -1,5 +1,6 @@
 from app.application.dto.parent_dto import ParentCreate, ParentRead
 from app.domain.repositories.parent_repository import ParentRepository
+from app.domain.entities.parent import Parent
 from app.core.security import get_password_hash
 
 def create_parent_service(repo: ParentRepository, parent_data: ParentCreate) -> Parent:
