@@ -26,5 +26,6 @@ class Person(BaseEntity):
     gender: Optional[Gender] = None
     email: str = Field(unique=True, index=True)
     phone_number: Optional[str] = None
+    hashed_password: Optional[str] = Field(default=None)
 
     # We will define address in each inherited class to avoid SQLAlchemy "already assigned" error

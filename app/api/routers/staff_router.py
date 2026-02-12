@@ -38,6 +38,7 @@ def read_staff_members(
     repo: StaffRepository = Depends(get_staff_repo),
     skip: int = 0,
     limit: int = 100,
+    current_admin: Any = Depends(get_current_admin)
 ) -> Any:
     """
     Retrieve staff members.

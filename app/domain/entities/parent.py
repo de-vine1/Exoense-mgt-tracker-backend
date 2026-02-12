@@ -8,3 +8,5 @@ class Parent(Person, table=True):
     address: Optional[Address] = Field(default=None, sa_column=Column(JSON))
     occupation: Optional[str] = None
     status: EntityStatus = Field(default=EntityStatus.ACTIVE)
+
+Parent.model_rebuild()

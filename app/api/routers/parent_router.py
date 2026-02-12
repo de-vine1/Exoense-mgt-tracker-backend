@@ -37,6 +37,7 @@ def read_parents(
     repo: ParentRepository = Depends(get_parent_repo),
     skip: int = 0,
     limit: int = 100,
+    current_admin: Any = Depends(get_current_admin)
 ) -> Any:
     """
     Retrieve parents.

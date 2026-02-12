@@ -32,29 +32,23 @@ async def get_current_user_data(token: str = Depends(oauth2_scheme)) -> dict:
     except JWTError:
         raise credentials_exception
 
-def get_current_student(user_data: dict = Depends(get_current_user_data)):
-    if user_data["role"] != "student":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
-    return user_data
+class RoleChecker:
+    def __init__(self, allowed_roles: list[str]):
+        self.allowed_roles = allowed_roles
 
-def get_current_parent(user_data: dict = Depends(get_current_user_data)):
-    if user_data["role"] != "parent":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
-    return user_data
+    def __call__(self, user_data: dict = Depends(get_current_user_data)):
+        if user_data["role"] not in self.allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Permissions denied. Required roles: {', '.join(self.allowed_roles)}"
+            )
+        return user_data
 
-def get_current_admin(user_data: dict = Depends(get_current_user_data)):
-    if user_data["role"] != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
-    return user_data
+# Specific Guards (shortcuts)
+get_current_student = RoleChecker(["student"])
+get_current_parent = RoleChecker(["parent"])
+get_current_admin = RoleChecker(["admin"])
+get_current_staff = RoleChecker(["staff", "admin"]) # Staff or higher
 
 def get_student_repo(db: Session = Depends(get_db)):
     from app.infrastructure.repositories.student_repo_impl import StudentRepositoryImpl

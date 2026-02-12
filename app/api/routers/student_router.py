@@ -37,6 +37,7 @@ def read_students(
     repo: StudentRepository = Depends(get_student_repo),
     skip: int = 0,
     limit: int = 100,
+    current_admin: Any = Depends(get_current_admin)
 ) -> Any:
     """
     Retrieve students.

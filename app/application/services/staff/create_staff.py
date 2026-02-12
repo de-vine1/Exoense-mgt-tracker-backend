@@ -1,6 +1,6 @@
-from app.domain.entities.staff import Staff
 from app.application.dto.staff_dto import StaffCreate
 from app.domain.repositories.staff_repository import StaffRepository
+from app.core.security import get_password_hash
 
 def create_staff_service(repo: StaffRepository, staff_data: StaffCreate) -> Staff:
     """
@@ -15,6 +15,7 @@ def create_staff_service(repo: StaffRepository, staff_data: StaffCreate) -> Staf
         gender=staff_data.gender,
         role_id=staff_data.role_id,
         department=staff_data.department,
+        hashed_password=get_password_hash(staff_data.password),
         address=staff_data.address.model_dump() if staff_data.address else None
     )
     

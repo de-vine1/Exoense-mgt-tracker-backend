@@ -6,9 +6,8 @@ from app.core.config import settings
 
 # Configure bcrypt to auto-truncate passwords to 72 bytes
 pwd_context = CryptContext(
-    schemes=["bcrypt"],
+    schemes=["pbkdf2_sha256"],
     deprecated="auto",
-    bcrypt__truncate_error=False  # Auto-truncate instead of raising error
 )
 ALGORITHM = settings.JWT_ALGORITHM
 
@@ -22,12 +21,7 @@ def create_access_token(subject: Union[str, Any], role: str, expires_delta: time
     return encoded_jwt
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    # Encode and truncate password to 72 bytes for bcrypt 5.0.0 compatibility
-    password_bytes = plain_password.encode('utf-8')[:72]
-    return pwd_context.verify(password_bytes, hashed_password)
+    return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password: str) -> str:
-    # Bcrypt 5.0.0 requires passwords to be 72 bytes or less
-    # Encode to bytes and truncate to ensure compatibility
-    password_bytes = password.encode('utf-8')[:72]
-    return pwd_context.hash(password_bytes)
+    return pwd_context.hash(password)

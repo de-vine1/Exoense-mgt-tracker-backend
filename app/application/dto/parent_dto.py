@@ -16,7 +16,7 @@ class ParentBase(BaseModel):
     occupation: Optional[str] = None
 
 class ParentCreate(ParentBase):
-    pass
+    password: str
 
 class ParentUpdate(BaseModel):
     first_name: Optional[str] = None

@@ -18,7 +18,7 @@ class StudentBase(BaseModel):
     reg_number: str
 
 class StudentCreate(StudentBase):
-    pass
+    password: str
 
 class StudentUpdate(BaseModel):
     first_name: Optional[str] = None

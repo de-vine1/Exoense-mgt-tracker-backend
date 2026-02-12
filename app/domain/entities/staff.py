@@ -10,3 +10,5 @@ class Staff(Person, table=True):
     role_id: Optional[UUID] = None
     department: Optional[str] = None
     status: EntityStatus = Field(default=EntityStatus.ACTIVE)
+
+Staff.model_rebuild()

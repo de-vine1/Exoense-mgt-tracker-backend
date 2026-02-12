@@ -1,6 +1,6 @@
-from app.domain.entities.student import Student
 from app.application.dto.student_dto import StudentCreate
 from app.domain.repositories.student_repository import StudentRepository
+from app.core.security import get_password_hash
 
 def create_student_service(repo: StudentRepository, student_data: StudentCreate) -> Student:
     """
@@ -18,6 +18,7 @@ def create_student_service(repo: StudentRepository, student_data: StudentCreate)
         group_name=student_data.group_name,
         image=student_data.image,
         qr_code=student_data.qr_code,
+        hashed_password=get_password_hash(student_data.password),
         address=student_data.address.model_dump() if student_data.address else None
     )
     

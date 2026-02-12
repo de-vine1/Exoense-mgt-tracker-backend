@@ -12,3 +12,5 @@ class Student(Person, table=True):
     image: Optional[str] = None
     qr_code: Optional[str] = None
     reg_number: str = Field(unique=True, index=True)
+
+Student.model_rebuild()

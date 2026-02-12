@@ -18,7 +18,7 @@ class StaffBase(BaseModel):
     department: Optional[str] = None
 
 class StaffCreate(StaffBase):
-    pass
+    password: str
 
 class StaffUpdate(BaseModel):
     first_name: Optional[str] = None
